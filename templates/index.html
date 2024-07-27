@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriPal - Your Nutrition Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="/" class="brand-logo">NutriPal</a>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="#meal-planner">Meal Planner</a></li>
+                <li><a href="#food-diary">Food Diary</a></li>
+                {% if 'username' in session %}
+                    <li><a href="{{ url_for('profile') }}" class="user-profile">
+                        <img src="{{ url_for('static', filename='images/pfp.png') }}" alt="Profile" class="avatar">
+                        {{ session['username'] }}
+                    </a></li>
+                {% else %}
+                    <li><a href="/login" >Login/Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="welcome">
+            <h1>Welcome to NutriPal</h1>
+            <p>Your personal nutrition assistant for a healthier lifestyle.</p>
+        </section>
+
+        <section id="meal-planner">
+            <h2>Meal Planner</h2>
+            <button onclick="calculateNutrition()">Get Meal Suggestions</button>
+            <div id="results" class="results"></div>
+        </section>
+
+        <section id="food-diary">
+            <h2>Food Diary</h2>
+            <div class="food-log-form">
+                <input type="date" id="foodDate">
+                <select id="mealType">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snack">Snack</option>
+                </select>
+                <input type="text" id="foodName" placeholder="Food Name">
+                <input type="number" id="foodCalories" placeholder="Calories">
+                <button onclick="logFood()">Log Food</button>
+            </div>
+            <div id="foodDiary"></div>
+            <div class="chart-container">
+                <canvas id="calorieChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <div id="loginForm">
+                <h2>Login</h2>
+                <form onsubmit="return login(event)">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
+            </div>
+            <div id="registerForm" style="display: none;">
+                <h2>Register</h2>
+                <form onsubmit="return register(event)">
+                    <input type="text" id="regUsername" placeholder="Username" required>
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                    <input type="number" id="weight" placeholder="Weight (kg)" required>
+                    <input type="number" id="height" placeholder="Height (cm)" required>
+                    <input type="number" id="age" placeholder="Age (years)" required>
+                    <select id="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <select id="activity_level" required>
+                        <option value="sedentary">Sedentary</option>
+                        <option value="lightly active">Lightly active</option>
+                        <option value="moderately active">Moderately active</option>
+                        <option value="very active">Very active</option>
+                        <option value="extra active">Extra active</option>
+                    </select>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
